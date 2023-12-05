@@ -1,0 +1,32 @@
+<launch>
+  <arg name="gui" default="true" doc="Starts gazebo gui" />
+  <arg name="paused" default="false" doc="Starts gazebo in paused mode" />
+  
+  <!-- 启动仿真环境 后续有环境修改，可以替换此处的worlds/empty.world，改为例如"$(find ur_gazebo)/worlds/table_custom.world" -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" default="$(find gazebo_ros)/launch/empty_world.world"/>
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="gui" value="$(arg gui)"/>
+  </include>
+
+  <!-- 加载TF -->
+  <node name="tf_footprint_base" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 base_link base_footprint 40" />
+
+  <!-- 启动机器人 -->
+  <include file="$(find e05)/launch/display_e05_with_gripper.launch" />
+
+  <!-- 将 robot_description 发送到 gazebo 中生成机器人 -->
+  <!-- <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-file $(find e05)/urdf/e05.urdf -urdf -model e05" output="screen" /> -->
+  <node name="spawn_gazebo_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model robot -z 0" respawn="false" output="screen" />
+
+  <node name="fake_joint_calibration" pkg="rostopic" type="rostopic" args="pub /calibrated std_msgs/Bool true"/>
+
+  <!-- 启动控制器 -->
+  <!-- <rosparam file="$(find e05)/controller/arm_controller.yaml" command="load"/> -->
+  <!-- <rosparam file="$(find e05)/controller/gripper_controller.yaml" command="load" /> -->
+  <!-- <node name="arm_controller_spawner" pkg="controller_manager" type="controller_manager" args="spawn arm_controller gripper_controller" respawn="false" output="screen"/> -->
+
+  <!-- 加载控制器 -->
+  <!-- <node name="ros_control_controller_manager" pkg="controller_manager" type="controller_manager" respawn="false" output="screen" args="load joint_group_position_controller" /> -->
+
+</launch>

@@ -1,0 +1,13 @@
+<launch>
+  <arg name="sim" default="false" />
+  <arg name="debug" default="false" />
+    
+  <!-- 重映射 follow_joint_trajectory，为了保证话题名对应 -->
+  <!-- <remap from="/follow_joint_trajectory" to="/arm_controller/follow_joint_trajectory"/> -->
+  
+  <!-- 启动 moveit -->
+  <include file="$(find e05_moveit)/launch/move_group.launch">
+    <arg name="debug" default="$(arg debug)" />
+  </include>
+  <!--node name="moveit_node" pkg="ur_planning" type="moveitServer.py" output="screen" required="false"=/-->
+</launch>

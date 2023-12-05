@@ -1,0 +1,10 @@
+<launch>
+  <arg name="model" />
+  <arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface" />
+
+  <!-- <param name="robot_description" textfile="$(find e05)/urdf/e05.xacro" /> -->
+  <param name="robot_description" command="$(find xacro)/xacro '$(find e05)/urdf/e05.xacro' transmission_hw_interface:=$(arg transmission_hw_interface)" />  
+  <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+  <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find e05)/urdf.rviz" /> -->
+</launch>

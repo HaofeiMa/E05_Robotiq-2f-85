@@ -1,0 +1,63 @@
+<launch>
+  <arg name="gui" default="true" doc="Starts gazebo gui" />
+  <arg name="paused" default="false" doc="Starts gazebo in paused mode" />
+  <arg name="use_rviz" default="true" />
+  <arg name="sim" default="true" />
+  <!-- 是否开启 debug 模式 -->
+  <arg name="debug" default="false" />
+  <arg unless="$(arg debug)" name="launch_prefix" value="" />
+  <arg     if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
+  <!-- 是否加载 MoveIt 的配置文件 -->
+  <arg name="config" default="true" />
+  <arg unless="$(arg config)" name="command_args" value="" />
+  <arg     if="$(arg config)" name="command_args" value="-d $(find e05_moveit)/launch/moveit.rviz" />
+
+  <!-- 启动仿真环境 后续有环境修改，可以替换此处的worlds/empty.world，改为例如"$(find ur_gazebo)/worlds/table_custom.world" -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" default="$(find gazebo_ros)/launch/empty_world.world"/>
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="gui" value="$(arg gui)"/>
+  </include>
+
+  <!-- 加载TF -->
+  <!-- <node name="tf_footprint_base" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 base_link base_footprint 40" /> -->
+
+  <!-- 启动机器人 -->
+  <include file="$(find e05)/launch/display_e05_with_gripper.launch" />
+
+  <!-- <arg name="model" /> -->
+  <!-- <arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface" /> -->
+  <!-- <param name="robot_description" textfile="$(find e05)/urdf/e05.xacro" /> -->
+  <!-- <param name="robot_description" command="$(find xacro)/xacro '$(find e05)/urdf/e05.xacro' transmission_hw_interface:=$(arg transmission_hw_interface)" />  
+  <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" /> -->
+
+  <!-- 将 robot_description 发送到 gazebo 中生成机器人 -->
+  <!-- <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-file $(find e05)/urdf/e05.urdf -urdf -model e05" output="screen" /> -->
+  <node name="spawn_gazebo_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model robot -z 0" respawn="false" output="screen" />
+  <include file="$(find e05)/launch/controller_utils.launch"/>
+
+
+  <!-- <node name="fake_joint_calibration" pkg="rostopic" type="rostopic" args="pub /calibrated std_msgs/Bool true"/> -->
+
+  <!-- 启动控制器 -->
+  <rosparam file="$(find e05)/controller/arm_controller_e05.yaml" command="load"/>
+  <rosparam file="$(find e05)/controller/gripper_controller_robotiq.yaml" command="load" />
+  <node name="arm_controller_spawner" pkg="controller_manager" type="controller_manager" args="spawn arm_controller gripper_controller" respawn="false" output="screen"/>
+
+  <!-- 加载控制器 -->
+  <node name="ros_control_controller_manager" pkg="controller_manager" type="controller_manager" respawn="false" output="screen" args="load joint_group_position_controller" />
+
+  <!-- 启动 moveit -->
+  <remap if="$(arg sim)" from="/follow_joint_trajectory" to="/arm_controller/follow_joint_trajectory"/>
+  <include file="$(find e05_moveit)/launch/move_group.launch">
+    <arg name="debug" default="$(arg debug)" />
+  </include>
+
+  <!-- 启动 rviz，并用上面定义的 launch_perfix 和 command_args 参数 -->
+  <node name="$(anon rviz)" launch-prefix="$(arg launch_prefix)" pkg="rviz" type="rviz" respawn="false"
+	args="$(arg command_args)" output="screen">
+    <rosparam command="load" file="$(find e05_moveit)/config/kinematics.yaml"/>
+  </node>
+
+</launch>
