@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>robotiq_2f_140_gripper_gazebo</name>
+  <version>1.0.0</version>
+  <description>
+      Gazebo wrapper for Robotiq ARG 2-Finger 140mm model C3. 
+  </description>
+  <author email="matteo.lucchi@joanneum.at">Matteo Lucchi</author>
+  <maintainer email="matteo.lucchi@joanneum.at">Matteo Lucchi</maintainer>
+  <license>BSD</license>
+  <buildtool_depend>catkin</buildtool_depend>
+  <test_depend>roslaunch</test_depend>
+  <exec_depend>controller_manager</exec_depend>
+  <exec_depend>effort_controllers</exec_depend>
+  <exec_depend>position_controllers</exec_depend>
+  <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>gazebo_ros_control</exec_depend>
+  <exec_depend>joint_state_controller</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>gripper_action_controller</exec_depend>
+  <exec_depend>robotiq_2f_140_gripper_visualization</exec_depend>
+  <exec_depend>roboticsgroup_upatras_gazebo_plugins</exec_depend>
+</package>

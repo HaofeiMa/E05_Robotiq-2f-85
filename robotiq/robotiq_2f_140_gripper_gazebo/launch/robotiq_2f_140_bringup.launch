@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<launch>
+  <!--
+    Main entry point for loading a single Robotiq 2F 140 Gripper into Gazebo, in isolation, in the
+    empty world.
+  -->
+
+  <!--Robot description and related parameter files -->
+  <arg name="robot_description_file" default="$(dirname)/inc/load_robotiq_2f_140_gripper.launch" doc="Launch file which populates the 'robot_description' parameter."/>
+
+  <!-- Controller configuration -->
+  <arg name="controller_config_file" default="$(find robotiq_2f_140_gripper_gazebo)/config/robotiq_2f_140_gripper_controllers.yaml" doc="Config file used for defining the ROS-Control controllers."/>
+  <arg name="controllers" default="joint_state_controller gripper_controller" doc="Controllers that are activated by default."/>
+
+  <!-- robot_state_publisher configuration -->
+  <arg name="tf_prefix" default="" doc="tf_prefix used for the robot."/>
+  <arg name="tf_pub_rate" default="125" doc="Rate at which robot_state_publisher should publish transforms."/>
+
+  <!-- Gazebo parameters -->
+  <arg name="paused" default="false" doc="Starts Gazebo in paused mode" />
+  <arg name="gui" default="true" doc="Starts Gazebo gui" />
+  <arg name="spawn_z" default="0.1" doc="At which height the model should be spawned. NOTE: lower values will cause the robot to collide with the ground plane." />
+
+  <!-- Load urdf on the parameter server -->
+  <include file="$(arg robot_description_file)">
+  </include>
+
+  <!-- Robot state publisher -->
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+    <param name="publish_frequency" type="double" value="$(arg tf_pub_rate)" />
+    <param name="tf_prefix" value="$(arg tf_prefix)" />
+  </node>
+
+  <!-- Start the 'driver' (ie: Gazebo in this case) -->
+  <include file="$(dirname)/inc/robotiq_2f_140_gripper_control.launch">
+    <arg name="controller_config_file" value="$(arg controller_config_file)"/>
+    <arg name="controllers" value="$(arg controllers)"/>
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="spawn_z" value="$(arg spawn_z)"/>
+  </include>
+</launch>

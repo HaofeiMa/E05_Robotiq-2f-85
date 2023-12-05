@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!--
+    Main xacro macro definition of the "Gazebo robot" model.
+
+    This wraps the model of the real robot and adds all elements and parameters
+    required by Gazebo.
+
+    It also adds the gazebo_ros_control plugin.
+
+    NOTE: this is NOT a URDF. It cannot directly be loaded by consumers
+    expecting a flattened '.urdf' file. See the top-level '.xacro' for that
+    (but note: that .xacro must still be processed by the xacro command).
+
+  -->
+
+
+  <!-- Definition of the main macro -->
+  <xacro:macro name="robotiq_arg2f_140_gazebo" params="
+    prefix 
+    transmission_hw_interface:=hardware_interface/EffortJointInterface"
+  >
+
+  <!--
+    Import the xacro macro for the REAL gripper (which we'll augment with Gazebo
+    specific elements in the wrapper macro below).
+
+    NOTE: this imports the '_macro.xacro' from robotiq_2f_140_gripper_visualization, as that contains
+    the definitions for the real gripper.
+  -->
+  <xacro:include filename="$(find robotiq_2f_140_gripper_visualization)/urdf/robotiq_arg2f_140_macro.xacro"/>
+
+
+  <!-- Instantiate model for the REAL robot. -->
+  <xacro:robotiq_arg2f_140 
+  prefix=""
+  transmission_hw_interface="$(arg transmission_hw_interface)"/>
+
+  <!-- Mimic joints plugin-->
+    <gazebo>
+      <plugin filename="libroboticsgroup_upatras_gazebo_mimic_joint_plugin.so" name="${prefix}mimic_robotiq_140_1">
+        <joint>${prefix}finger_joint</joint>
+        <mimicJoint>${prefix}left_inner_knuckle_joint</mimicJoint>
+        <multiplier>-1.0</multiplier>
+      </plugin>
+      <plugin filename="libroboticsgroup_upatras_gazebo_mimic_joint_plugin.so" name="${prefix}mimic_robotiq_140_2">
+        <joint>${prefix}finger_joint</joint>
+        <mimicJoint>${prefix}left_inner_finger_joint</mimicJoint>
+        <multiplier>1.0</multiplier>
+      </plugin>
+      <plugin filename="libroboticsgroup_upatras_gazebo_mimic_joint_plugin.so" name="${prefix}mimic_robotiq_140_3">
+        <joint>${prefix}finger_joint</joint>
+        <mimicJoint>${prefix}right_inner_knuckle_joint</mimicJoint>
+        <multiplier>-1.0</multiplier>
+      </plugin>
+      <plugin filename="libroboticsgroup_upatras_gazebo_mimic_joint_plugin.so" name="${prefix}mimic_robotiq_140_4">
+        <joint>${prefix}finger_joint</joint>
+        <mimicJoint>${prefix}right_inner_finger_joint</mimicJoint>
+        <multiplier>1.0</multiplier>
+      </plugin>
+      <plugin filename="libroboticsgroup_upatras_gazebo_mimic_joint_plugin.so" name="${prefix}mimic_robotiq_140_5">
+        <joint>${prefix}finger_joint</joint>
+        <mimicJoint>${prefix}right_finger_joint</mimicJoint>
+        <multiplier>-1.0</multiplier>
+      </plugin>
+    </gazebo>
+
+    <!-- Links colors  -->
+    <gazebo reference="${prefix}robotiq_arg2f_base_link">
+        <material>Gazebo/Black</material>
+    </gazebo>
+    <gazebo reference="${prefix}left_outer_knuckle">
+        <material>Gazebo/Grey</material>
+    </gazebo>
+    <gazebo reference="${prefix}left_outer_finger">
+        <material>Gazebo/Black</material>
+    </gazebo>
+    <gazebo reference="${prefix}left_inner_finger">
+        <material>Gazebo/Grey</material>
+    </gazebo>
+    <gazebo reference="${prefix}left_inner_knuckle">
+        <material>Gazebo/Black</material>
+    </gazebo>
+    <gazebo reference="${prefix}right_outer_knuckle">
+        <material>Gazebo/Grey</material>
+    </gazebo>
+    <gazebo reference="${prefix}right_outer_finger">
+        <material>Gazebo/Black</material>
+    </gazebo>
+    <gazebo reference="${prefix}right_inner_finger">
+        <material>Gazebo/Grey</material>
+    </gazebo>
+    <gazebo reference="${prefix}right_inner_knuckle">
+        <material>Gazebo/Black</material>
+    </gazebo>
+
+    <!--
+      Inject Gazebo ROS Control plugin, which allows us to use ros_control
+      controllers to control the virtual robot hw.
+    -->
+    <gazebo>
+      <plugin name="ros_control" filename="libgazebo_ros_control.so">
+      </plugin>
+    </gazebo>
+    
+  </xacro:macro>
+</robot>
