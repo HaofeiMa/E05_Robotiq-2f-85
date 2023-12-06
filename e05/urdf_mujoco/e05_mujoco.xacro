@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="e05">
+    <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
+
+    <mujoco>
+        <compiler 
+        meshdir="../meshes_mujoco/" 
+        balanceinertia="true" 
+        discardvisual="false" />
+    </mujoco>
+
+    <!-- E05机械臂 -->
+    <xacro:include filename="$(find e05)/urdf/e05.urdf" />
+
+
+    <!-- Gazebo 支持 -->
+    <xacro:include filename="$(find e05)/urdf/common.gazebo.xacro" />
+    <!-- 加载gazebo中需要使用的模型 -->
+    <!-- macros for transmission -->
+    <xacro:macro name="transmission_block" params="joint_name">
+	  <transmission name="tran1">
+	    <type>transmission_interface/SimpleTransmission</type>
+	    <joint name="${joint_name}">
+	      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+	    </joint>
+	    <actuator name="motor1">
+	      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+	      <mechanicalReduction>1</mechanicalReduction>
+	    </actuator>
+	  </transmission>
+   </xacro:macro>
+    <!-- Transmissions for ros control -->
+    <xacro:transmission_block joint_name="joint1"/>
+    <xacro:transmission_block joint_name="joint2"/>
+    <xacro:transmission_block joint_name="joint3"/>
+    <xacro:transmission_block joint_name="joint4"/>
+    <xacro:transmission_block joint_name="joint5"/>
+    <xacro:transmission_block joint_name="joint6"/>
+    <!-- <xacro:include filename="$(find e05)/urdf/e05.gazebo.xacro" /> -->
+
+
+    <!-- 机器人固定在世界坐标系下 -->
+    <link name="world" />
+    <joint name="world_joint" type="fixed">
+        <parent link="world" />
+        <child link = "base_link" />
+        <origin xyz="0.0 0.0 0" rpy="0.0 0.0 0.0" />
+    </joint>
+
+    <!-- Robotiq 2F-85夹爪 -->
+    <xacro:include filename="$(find robotiq_2f_85_gripper_visualization)/urdf/robotiq_arg2f_85_macro.xacro" />
+    <xacro:include filename="$(find robotiq_85_description)/urdf/robotiq_85_gripper.urdf.xacro" />
+    <gazebo>
+        <plugin name="gazebo_grasp_fix" filename="libgazebo_grasp_fix.so">
+            <arm>
+                <!-- <arm_name>应该是一个单独的名字，不能和别的任何关节同名 -->
+                <arm_name>ur5_gripper</arm_name>
+                <!-- <palm_link>是和手指相连的关节 -->
+                <palm_link>link6</palm_link>
+                <!-- <gripper_link>是会检测碰撞的关节 -->
+                <gripper_link>gripper_finger1_finger_tip_link</gripper_link>
+                <gripper_link>gripper_finger2_finger_tip_link</gripper_link>
+                <gripper_link>gripper_finger2_knuckle_link</gripper_link>
+                <gripper_link>gripper_finger1_knuckle_link</gripper_link>
+                <gripper_link>gripper_finger1_inner_knuckle_link</gripper_link>
+                <gripper_link>gripper_finger2_inner_knuckle_link</gripper_link>
+            </arm>
+            <forces_angle_tolerance>150</forces_angle_tolerance>
+            <!-- 检测频率 -->
+            <update_rate>130</update_rate>
+            <!-- 检测为抓取状态的接触次数阈值 -->
+            <grip_count_threshold>2</grip_count_threshold>
+            <max_grip_count>8</max_grip_count>
+            <!-- 释放时的容忍度，超过这个就会把物体放下。数值越大，需要把夹爪打开更大才能释放物体 -->
+            <release_tolerance>0.005</release_tolerance>
+            <disable_collisions_on_attach>true</disable_collisions_on_attach>
+            <contact_topic>__default_topic__</contact_topic>
+        </plugin>
+    </gazebo>
+
+
+    <!-- 将夹爪实例化，并设置夹爪和机械臂的关系（连接在tool0上） -->
+    <xacro:robotiq_85_gripper prefix="" parent="ee_link" >
+        <origin xyz="0 0 0" rpy="0 ${-pi/2} 0"/>
+    </xacro:robotiq_85_gripper>
+
+    <!-- 相机实例化，然后设置仿真位置 -->
+    <!-- <xacro:include filename="$(find realsense_ros_gazebo)/xacro/depthcam.xacro"/>
+    <xacro:realsense_d435 sensor_name="d435" parent_link="tool0" rate="10">
+        <origin rpy="0 ${-pi/2} 0 " xyz="-0.1 0 0"/>
+    </xacro:realsense_d435> -->
+
+</robot>
