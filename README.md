@@ -78,10 +78,10 @@ cd ~/.mujoco/mujoco210/bin
 
 ```shell
 cd ~/.mujoco/mujoco210/bin
-./simulate /path/to/workspace/src/E05_Robotiq-2f-85/e05/urdf_mujoco/e05_mujoco.xml
+./simulate /path/to/workspace/src/E05_Robotiq-2f-85/e05/urdf_mujoco/e05_exp_mujoco.xml
 ```
 
-![mujoco](https://github.com/HaofeiMa/E05_Robotiq-2f-85/assets/49356049/315257c6-112d-447f-b84f-72c62adedc3e)
+![image](https://github.com/HaofeiMa/E05_Robotiq-2f-85/assets/49356049/a60747b2-7964-4eed-96b1-a0e8c6a15499)
 
 
 ## More
