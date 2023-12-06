@@ -45,3 +45,7 @@ Visulaize the motion in gazebo, using moveit pannel in rviz.
 ```shell
 roslaunch e05_moveit demo_gazebo.launch
 ```
+
+## More
+
+If you want to know the complete creation process of the repository, or if you want to use your own Solidworks model to create Gazebo simulations and Moveit controls, please refer to [my blog](https://www.mahaofei.com/post/7fec171b.html).
