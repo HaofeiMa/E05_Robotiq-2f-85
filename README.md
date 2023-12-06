@@ -1,7 +1,9 @@
 # E05_Robotiq-2f-85
-A ROS package, include Hansrobot E05 Arm and Robotiq 2f-85 gripper.
+A ROS package for simulation in gazebo and mujoco, include Hansrobot E05 Arm and Robotiq 2f-85 gripper.
 
-I converted from the Solidworks model on the [Hansrobot official website](https://www.hansrobot.com/service/download/3dmoxing?pagenum=3) to the URDF model, added the Robotiq 2f-85 gripper model according to [this link](https://github.com/ros-industrial/robotiq.git), and performed Moveit. I adjusted the parameters and fixed some bugs. Currently, I am able to use the Moveit Panel to control the robot movement in Gazebo and rviz.
+I converted from the Solidworks model on the [Hansrobot official website](https://www.hansrobot.com/service/download/3dmoxing?pagenum=3) to the URDF model, added the Robotiq 2f-85 gripper model according to [this link](https://github.com/ros-industrial/robotiq.git), and performed Moveit. I adjusted the parameters and fixed some bugs. Currently, the robot can be controlled using the Moveit Panel in Gazebo and rviz.
+
+And the mujoco configuration process also be finished, it can be seen in `e05/urdf_mujoco/e05_mujoco.xml`.
 
 **Environment Required:**
 
