@@ -1,0 +1,22 @@
+<mujoco model="e05">
+    <compiler angle="radian" meshdir="../meshes/" />
+    <size njmax="500" nconmax="100" />
+
+    <!-- 加载 E05 机械臂模型与基本配置、驱动 -->
+    <include file="../include/e05_assets.xml"></include>
+
+    <!-- 加载 Robotiq-2f-85 夹爪与基本配置、驱动 -->
+    <include file="../include/robotiq_assets.xml"></include>
+    
+    <!-- 机器人本体 -->
+    <worldbody>
+        <light diffuse="0.6 0.6 0.6" pos="0 0 3"/>
+        <light diffuse="0.6 0.6 0.6" pos="0 -0.3 3" dir="0 0.2 -0.8" directional="true"/>
+        <!-- <light cutoff="100" diffuse="0.5 0.5 0.5" dir="-0 0 -1.3" directional="true" exponent="1" pos="0 0 1.3" specular=".1 .1 .1"/> -->
+        <geom name="floor" size="0 0 0.05" type="plane" material="groundplane"/>
+
+        <!-- 加载机器人运动链 -->
+        <include file="../include/robot_chain.xml"></include>
+
+    </worldbody>
+</mujoco>

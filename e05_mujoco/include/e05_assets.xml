@@ -1,0 +1,41 @@
+<mujocoinclude>
+
+    <!-- 加载 E05 机械臂模型与基本配置 -->
+    <asset>
+        <mesh name="base_link" file="e05/base_link.STL" />
+        <mesh name="link1" file="e05/link1.STL" />
+        <mesh name="link2" file="e05/link2.STL" />
+        <mesh name="link3" file="e05/link3.STL" />
+        <mesh name="link4" file="e05/link4.STL" />
+        <mesh name="link5" file="e05/link5.STL" />
+        <mesh name="link6" file="e05/link6.STL" />
+        <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+        <!-- <texture builtin="flat" height="1278" mark="cross" markrgb="1 1 1" name="texgeom" random="0.01" rgb1="0.8 0.6 0.4" rgb2="0.8 0.6 0.4" type="cube" width="127"/> -->
+        <!-- <material name="geom" texture="texgeom" texuniform="true"/> -->
+        <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3"
+      markrgb="0.8 0.8 0.8" width="300" height="300"/>
+        <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+    </asset>
+    <default>
+        <default class="E05">
+            <joint damping='200' />
+        </default>
+        <default class="E05e">
+            <joint damping='100'/>
+        </default>
+    </default>
+
+
+    <!-- E05 机械臂驱动 -->
+    <actuator>
+        <position name="joint1" ctrllimited="true" ctrlrange="-3.14159 3.14159" joint="joint1" kp="2000"/>
+        <position name="joint2" ctrllimited="true" ctrlrange="-1.57079 1.57079" joint="joint2" kp="2000"/>
+        <!-- <position name="joint3" ctrllimited="true" ctrlrange="-3.14159 3.14159" joint="joint3" kp="1500"/> -->
+        <position name="joint3" ctrllimited="true" ctrlrange="-4.71238 1.57079" joint="joint3" kp="1500"/>
+        <position name="joint4" ctrllimited="true" ctrlrange="-3.14159 3.14159" joint="joint4" kp="800"/>
+        <!-- <position name="joint5" ctrllimited="true" ctrlrange="-3.14159 3.14159" joint="joint5" kp="500"/> -->
+        <position name="joint5" ctrllimited="true" ctrlrange="-4.71238 1.57079" joint="joint5" kp="500"/>
+        <position name="joint6" ctrllimited="true" ctrlrange="-3.14159 3.14159" joint="joint6" kp="500"/>     
+    </actuator>
+
+</mujocoinclude>
