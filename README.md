@@ -57,13 +57,20 @@ tar -xvzf mujoco210-linux-x86_64.tar.gz -C ~/.mujoco
 gedit ~/.bashrc
 ```
 
-Add following config
+Add following config in `~/.bashrc`
 
 ```shell
 # Mujoco environment
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/nvidia
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/USERNAME/.mujoco/mujoco210/bin
 export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libGLEW.so
+```
+
+Install the `mujoco-py`
+
+```shell
+pip install mujoco-py<2.2,>=2.1
+pip install "cython<3"
 ```
 
 Test the mujoco
