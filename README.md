@@ -69,7 +69,7 @@ export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libGLEW.so
 Install the `mujoco-py`
 
 ```shell
-pip install mujoco-py<2.2,>=2.1
+pip install mujoco-py
 pip install "cython<3"
 ```
 
